@@ -1,14 +1,14 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import sqlite3
 
-# Create the Flask app
+#  Setup Flask app
 app = Flask(__name__, template_folder='../templates')
 
-# 🔧 Step 1: Create database table (if not already created)
-def init_db():
-    conn = sqlite3.connect('trees.db')  # creates a file called trees.db
-    c = conn.cursor()
-    c.execute('''
+#  My own code (which i moodify from old )of the database setup function
+def setup_database():
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS trees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
@@ -17,31 +17,32 @@ def init_db():
             status TEXT
         )
     ''')
-    conn.commit()
-    conn.close()
-    # 🔁 Step 2: Handle form and insert data into database
+    connection.commit()
+    connection.close()
+
+#  Main route to handle form
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        name = request.form.get('tree_name')
+        tree_name = request.form.get('tree_name')
         location = request.form.get('location')
         date = request.form.get('date_planted')
         status = request.form.get('status')
 
-        # Print for testing
-        print("✅ Received:", name, location, date, status)
+        print(" Received:", tree_name, location, date, status)
 
-        # Save to database
-        conn = sqlite3.connect('trees.db')
-        c = conn.cursor()
-        c.execute("INSERT INTO trees (name, location, date, status) VALUES (?, ?, ?, ?)",
-                  (name, location, date, status))
-        conn.commit()
-        conn.close()
+        connection = sqlite3.connect('trees.db')
+        cursor = connection.cursor()
+        cursor.execute('''
+            INSERT INTO trees (name, location, date, status)
+            VALUES (?, ?, ?, ?)
+        ''', (tree_name, location, date, status))
+        connection.commit()
+        connection.close()
 
     return render_template('index.html')
 
-# 🚀 Step 3: Start Flask and initialize database
+#  Run the app
 if __name__ == '__main__':
-    init_db()  # run this once when app starts
+    setup_database()
     app.run(debug=True)
