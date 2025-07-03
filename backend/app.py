@@ -21,7 +21,7 @@
 #     conn.commit()
 #     conn.close()
 
-# # 🧾 Form route
+# #  Form route
 # @app.route('/', methods=['GET', 'POST'])
 # def home():
 #     if request.method == 'POST':
@@ -77,9 +77,7 @@ def home():
         location = request.form.get('location')
         date = request.form.get('date_planted')
         status = request.form.get('status')
-
-        print(" Received:", tree_name, location, date, status)
-
+        # it is used for  save the form data into the database
         connection = sqlite3.connect('trees.db')
         cursor = connection.cursor()
         cursor.execute('''
@@ -88,8 +86,14 @@ def home():
         ''', (tree_name, location, date, status))
         connection.commit()
         connection.close()
+        # i use that code for fetch the data from the database
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute("SELECT name, location, date, status FROM trees")
+    trees = cursor.fetchall()
+    connection.close()
 
-    return render_template('index.html')
+    return render_template('index.html', trees=trees)
 
 
 if __name__ == '__main__':
