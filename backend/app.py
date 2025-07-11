@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
-# Database setup
+#here  is  Database setup
 def setup_database():
     conn = sqlite3.connect('trees.db')
     c = conn.cursor()
@@ -19,12 +19,12 @@ def setup_database():
     conn.commit()
     conn.close()
 
-# Serve HTML page
+# for  HTML page
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Add new tree (POST)
+# i am using this for Add new tree (POST)
 @app.route('/api/trees', methods=['POST'])
 def add_tree():
     data = request.get_json()
@@ -38,7 +38,7 @@ def add_tree():
     conn.close()
     return jsonify({"message": "Tree added successfully!"}), 201
 
-# Get all trees (GET)
+#for  Get all trees (GET)
 @app.route('/api/trees', methods=['GET'])
 def get_trees():
     conn = sqlite3.connect('trees.db')
@@ -51,7 +51,7 @@ def get_trees():
         for t in trees
     ])
 
-# Delete a tree (DELETE)
+# i am using it for Delete a tree 
 @app.route('/api/trees/<int:tree_id>', methods=['DELETE'])
 def delete_tree(tree_id):
     conn = sqlite3.connect('trees.db')
@@ -61,7 +61,7 @@ def delete_tree(tree_id):
     conn.close()
     return jsonify({"message": "Tree deleted"})
 
-# Run the app
+
 if __name__ == '__main__':
     setup_database()
     app.run(debug=True)
