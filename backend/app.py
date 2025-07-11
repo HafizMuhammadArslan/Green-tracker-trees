@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from datetime import timedelta
 import sqlite3
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app.secret_key = 'your_secret_key'  
+app.permanent_session_lifetime = timedelta(minutes=10)
+
 
 #here  is  Database setup
 def setup_database():
@@ -18,11 +22,28 @@ def setup_database():
     ''')
     conn.commit()
     conn.close()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] == 'admin' and request.form['password'] == 'pass123':
+            session.permanent = True  # ← this ensures session expires based on lifetime
+            session['logged_in'] = True
+            return redirect(url_for('home'))
+        else:
+            error = 'Invalid credentials. Please try again.'
+    return render_template('login.html', error=error)
 
 # for  HTML page
 @app.route('/')
 def home():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('index.html')
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('login'))
 
 # i am using this for Add new tree (POST)
 @app.route('/api/trees', methods=['POST'])
