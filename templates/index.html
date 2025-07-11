@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Green Tracker</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Tree Planting Tracker</h1>
+<form id="treeForm">
+  <label>Tree Name:</label>
+  <input type="text" id="treeName" required>
+
+  <label>Location:</label>
+  <input type="text" id="location" required>
+
+  <label>Date Planted:</label>
+  <input type="date" id="datePlanted" required>
+
+  <label>Status:</label>
+  <select id="status">
+    <option value="Healthy">Healthy</option>
+    <option value="Growing">Growing</option>
+    <option value="Cut">Cut</option>
+    <option value="Dead">Dead</option>
+  </select>
+
+  <button type="submit">Add Tree</button>
+</form>
+
+ <h2 class="Planted">Planted Trees</h2>
+    <ul id="treeList">
+    </ul>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+ 
+</body>
+</html>
