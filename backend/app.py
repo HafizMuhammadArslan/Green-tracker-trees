@@ -60,6 +60,18 @@ def delete_tree(tree_id):
     conn.commit()
     conn.close()
     return jsonify({"message": "Tree deleted"})
+#for update a tree
+@app.route('/api/trees/<int:tree_id>', methods=['PUT'])
+def update_tree(tree_id):
+    data = request.get_json()
+    conn = sqlite3.connect('trees.db')
+    c = conn.cursor()
+    c.execute('''
+        UPDATE trees SET name = ?, location = ?, date = ?, status = ? WHERE id = ?
+    ''', (data['name'], data['location'], data['date'], data['status'], tree_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Tree updated successfully!"})
 
 
 if __name__ == '__main__':
