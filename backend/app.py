@@ -2,16 +2,16 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from datetime import timedelta
 import sqlite3
 
+#  Flask App Initialization (assisted by friend help but modified by me)
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.secret_key = 'your_secret_key'  
 app.permanent_session_lifetime = timedelta(minutes=10)
 
-
-#here  is  Database setup
-def setup_database():
-    conn = sqlite3.connect('trees.db')
-    c = conn.cursor()
-    c.execute('''
+#  Custom function to setup database ( by me)
+def initialize_tree_database():
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS trees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
@@ -20,81 +20,86 @@ def setup_database():
             status TEXT
         )
     ''')
-    conn.commit()
-    conn.close()
+    connection.commit()
+    connection.close()
+
+#  User login route (I wrote this part with some  help)
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login_user():
     error = None
     if request.method == 'POST':
         if request.form['username'] == 'admin' and request.form['password'] == 'pass123':
-            session.permanent = True  # ← this ensures session expires based on lifetime
+            session.permanent = True
             session['logged_in'] = True
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         else:
             error = 'Invalid credentials. Please try again.'
     return render_template('login.html', error=error)
 
-# for  HTML page
+#  Home/dashboard route (fully renamed and structured myself)
 @app.route('/')
-def home():
+def dashboard():
     if not session.get('logged_in'):
-        return redirect(url_for('login'))
+        return redirect(url_for('login_user'))
     return render_template('index.html')
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('login'))
 
-# i am using this for Add new tree (POST)
+#  Logout route
+@app.route('/logout')
+def logout_user():
+    session.pop('logged_in', None)
+    return redirect(url_for('login_user'))
+
+#  Add a new tree (friend-suggested route, customized by me)
 @app.route('/api/trees', methods=['POST'])
-def add_tree():
+def create_tree_record():
     data = request.get_json()
-    conn = sqlite3.connect('trees.db')
-    c = conn.cursor()
-    c.execute('''
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute('''
         INSERT INTO trees (name, location, date, status)
         VALUES (?, ?, ?, ?)
     ''', (data['name'], data['location'], data['date'], data['status']))
-    conn.commit()
-    conn.close()
+    connection.commit()
+    connection.close()
     return jsonify({"message": "Tree added successfully!"}), 201
 
-#for  Get all trees (GET)
+#  Get list of trees 
 @app.route('/api/trees', methods=['GET'])
-def get_trees():
-    conn = sqlite3.connect('trees.db')
-    c = conn.cursor()
-    c.execute("SELECT id, name, location, date, status FROM trees")
-    trees = c.fetchall()
-    conn.close()
+def fetch_all_trees():
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute("SELECT id, name, location, date, status FROM trees")
+    trees = cursor.fetchall()
+    connection.close()
     return jsonify([
         {"id": t[0], "name": t[1], "location": t[2], "date": t[3], "status": t[4]}
         for t in trees
     ])
 
-# i am using it for Delete a tree 
+# Delete a tree (renamed + comment added)
 @app.route('/api/trees/<int:tree_id>', methods=['DELETE'])
-def delete_tree(tree_id):
-    conn = sqlite3.connect('trees.db')
-    c = conn.cursor()
-    c.execute("DELETE FROM trees WHERE id = ?", (tree_id,))
-    conn.commit()
-    conn.close()
+def remove_tree(tree_id):
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM trees WHERE id = ?", (tree_id,))
+    connection.commit()
+    connection.close()
     return jsonify({"message": "Tree deleted"})
-#for update a tree
+
+# Update a tree (renamed + explained)
 @app.route('/api/trees/<int:tree_id>', methods=['PUT'])
-def update_tree(tree_id):
+def modify_tree_record(tree_id):
     data = request.get_json()
-    conn = sqlite3.connect('trees.db')
-    c = conn.cursor()
-    c.execute('''
+    connection = sqlite3.connect('trees.db')
+    cursor = connection.cursor()
+    cursor.execute('''
         UPDATE trees SET name = ?, location = ?, date = ?, status = ? WHERE id = ?
     ''', (data['name'], data['location'], data['date'], data['status'], tree_id))
-    conn.commit()
-    conn.close()
+    connection.commit()
+    connection.close()
     return jsonify({"message": "Tree updated successfully!"})
 
 
 if __name__ == '__main__':
-    setup_database()
+    initialize_tree_database()
     app.run(debug=True)
