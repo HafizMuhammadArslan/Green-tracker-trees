@@ -1,21 +1,48 @@
-# Green Tracker – Tree Planting System for Sialkot
+1. Introduction
+This project, 'Green Tracker Tree', was developed as part of the B9IS123 module assessment. The purpose of this project is to provide a platform to track planted trees, their location, date planted, and health status. The application was created using Flask (Python) for the backend and HTML/CSS/JavaScript for the frontend.
+2. AI and Assistance Declaration 
+This project has code that I wrote with some help from a friend and AI (ChatGPT) just for refining ideas. There is no complete copy-paste code from ChatGPT in the final project without going through manual changes and testing. I used AI mainly for assistance in editing and organizing. I developed custom functions, named routes, and structured logic on my own, with a friend reviewing my work. To maintain academic honesty, any ideas from ChatGPT have been renamed, simplified, and clearly commented.Also using W3School website for learning Flask routes.
+ 3. Project Features
+- User Login with session control
+- Add, Edit, Delete tree records
+- Frontend with responsive form
+- Backend API using Flask
+- SQLite database setup and connection
+- Basic authentication using hardcoded login
+- Deployed and tested locally on localhost:5000
 
-Green Tracker is a basic web application designed to help a local company tree saver in Sialkot track their tree planting activities. It allows users to record tree details such as the name of the tree, who planted it, the location, planting date, and its current status. The application displays all planted trees in a table format for easy review, and includes a map showing the general area of planting near Jinnah Stadium, Sialkot. This helps small organizations manage their environmental efforts in a simple and organized way.
 
-# Features of this project
 
-- Add new tree entries through a form
-- View all trees in a table
-- Delete any tree records when needed
-- View a Google map showing the plantation area
+4. What I Have to Offer
+- All route functions have been renamed and commented out.
+ - created an HTML layout using a CSS background and form design.
+- A manual session timeout was implemented.
+- A custom edit form that uses JavaScript and handles tree updates dynamically.
+- Using.gitignore, the database was eliminated from Git commits
+5.Project Structure
+Greentracker-tree/
+│
+├── backend/
+│ ├── app.py # Main Flask server
+│ ├── test_api.py # API testing script
+│
+├── templates/
+│ └── index.html # Web interface
+│ └── login.html # Login page
+│
+├── static/
+│ ├── style.css # Styles
+│ ├── script.js # JS logic
+│ └── images/ # Background image
+│
+└── trees.db # Local database (ignored in git)
+6. Testing & Deployment
+Python `requests` in `test_api.py` was used to test the API. The routes POST, GET, PUT, and DELETE were all successfully tested.
+The project was manually tested using the browser interface after being deployed locally.
+Commits that matched the stages of development were pushed to GitHub step-by-step.
 
-# Technologies Use in that project 
 
-- HTML, CSS, JavaScript for the frontend
-- Python with Flask for the backend
-- SQLite as the database
-- Google Maps Embed for location context
-- Git and GitHub for version control
+
 
 location 
 (https://www.google.com/maps?q=jinnah+stadium+sialkot)
