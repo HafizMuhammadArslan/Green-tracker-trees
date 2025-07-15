@@ -48,3 +48,6 @@ Commits that matched the stages of development were pushed to GitHub step-by-ste
 
 location 
 (https://www.google.com/maps?q=jinnah+stadium+sialkot)
+7.Reference
+https://www.geeksforgeeks.org/python/flask-app-routing
+https://www.w3schools.com/python/
