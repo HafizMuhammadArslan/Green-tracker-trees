@@ -1,3 +1,5 @@
+Green-tracker-tree Project
+
 1. Introduction
 This project, 'Green Tracker Tree', was developed as part of the B9IS123 module assessment. The purpose of this project is to provide a platform to track planted trees, their location, date planted, and health status. The application was created using Flask (Python) for the backend and HTML/CSS/JavaScript for the frontend.
 2. AI and Assistance Declaration 
